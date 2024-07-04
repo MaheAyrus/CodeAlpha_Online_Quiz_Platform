@@ -1,25 +1,19 @@
 import java.util.*;
-
-// BankAccount class to represent individual bank accounts
 class BankAccount {
     private String accountNumber;
     private String accountHolderName;
     private double balance;
-    private String Address;
-    private String pno;
+    private String address;
+    private String phoneNumber;
     private String email;
-
-    // Constructor to initialize the account
-    public BankAccount(String accountNumber, String accountHolderName, String Address, String pno, String email) {
+    public BankAccount(String accountNumber, String accountHolderName, String address, String phoneNumber, String email) {
         this.accountNumber = accountNumber;
         this.accountHolderName = accountHolderName;
         this.balance = 0.0;
-        this.Address = Address;
-        this.pno = pno;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
         this.email = email;
     }
-
-    // Method to deposit money into the account
     public void deposit(double amount) {
         if (amount > 0) {
             balance += amount;
@@ -28,8 +22,6 @@ class BankAccount {
             System.out.println("Invalid amount. Deposit failed.");
         }
     }
-
-    // Method to withdraw money from the account
     public void withdraw(double amount) {
         if (amount > 0 && balance >= amount) {
             balance -= amount;
@@ -38,34 +30,90 @@ class BankAccount {
             System.out.println("Insufficient balance or invalid amount. Withdrawal failed.");
         }
     }
-
-    // Method to check the current balance
     public double checkBalance() {
         return balance;
     }
-
-    // Method to display account details
     public void displayAccountDetails() {
         System.out.println("Account Number: " + accountNumber);
         System.out.println("Account Holder Name: " + accountHolderName);
         System.out.println("Balance: " + balance);
-        System.out.println("Address: " + Address);
-        System.out.println("Phone Number: " + pno);
+        System.out.println("Address: " + address);
+        System.out.println("Phone Number: " + phoneNumber);
         System.out.println("E-Mail: " + email);
     }
+    public String getAccountNumber() {
+        return accountNumber;
+    }
 }
-
-// Main class to demonstrate the banking system
 public class BankingSystem {
+    private static Map<String, BankAccount> accounts = new HashMap<>();5
+    static void initialize() {
+        BankAccount newAccount = new BankAccount("12345", "uma", "avadi", "1234567890", "uma@avadi.com");
+        accounts.put("12345", newAccount);
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        int choice;
 
-        // Creating a new bank account
-        BankAccount account1 = new BankAccount("12345", "John Doe", "Avadi - Chennai", "+91 9255995254", "john@demo.com");
+        initialize();
+
+        do {
+            System.out.println("\n**** Banking System Menu ****");
+            System.out.println("1. Create New Account");
+            System.out.println("2. Select Account");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    createNewAccount(scanner);
+                    break;
+                case 2:
+                    selectAccount(scanner);
+                    break;
+                case 3:
+                    System.out.println("Exiting... Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+        } while (choice != 3);
+
+        scanner.close();
+    }
+
+    private static void createNewAccount(Scanner scanner) {
+        System.out.print("Enter Account Number: ");
+        String accountNumber = scanner.next();
+        System.out.print("Enter Account Holder Name: ");
+        String accountHolderName = scanner.next();
+        System.out.print("Enter Address: ");
+        String address = scanner.next();
+        System.out.print("Enter Phone Number: ");
+        String phoneNumber = scanner.next();
+        System.out.print("Enter E-Mail: ");
+        String email = scanner.next();
+
+        BankAccount newAccount = new BankAccount(accountNumber, accountHolderName, address, phoneNumber, email);
+        accounts.put(accountNumber, newAccount);
+        System.out.println("Account created successfully.");
+    }
+
+    private static void selectAccount(Scanner scanner) {
+        System.out.print("Enter Account Number: ");
+        String accountNumber = scanner.next();
+        BankAccount account = accounts.get(accountNumber);
+
+        if (account == null) {
+            System.out.println("Account not found.");
+            return;
+        }
 
         int choice;
         do {
-            System.out.println("\n**** Banking System Menu ****");
+            System.out.println("\n**** Account Menu ****");
             System.out.println("1. Deposit Money");
             System.out.println("2. Withdraw Money");
             System.out.println("3. Check Balance");
@@ -78,28 +126,26 @@ public class BankingSystem {
                 case 1:
                     System.out.print("Enter amount to deposit: ");
                     double depositAmount = scanner.nextDouble();
-                    account1.deposit(depositAmount);
+                    account.deposit(depositAmount);
                     break;
                 case 2:
                     System.out.print("Enter amount to withdraw: ");
                     double withdrawAmount = scanner.nextDouble();
-                    account1.withdraw(withdrawAmount);
+                    account.withdraw(withdrawAmount);
                     break;
                 case 3:
-                    double balance = account1.checkBalance();
+                    double balance = account.checkBalance();
                     System.out.println("Current Balance: " + balance);
                     break;
                 case 4:
-                    account1.displayAccountDetails();
+                    account.displayAccountDetails();
                     break;
                 case 5:
-                    System.out.println("Exiting... Thank you!");
+                    System.out.println("Returning to main menu...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please enter a valid option.");
             }
         } while (choice != 5);
-
-        scanner.close();
     }
 }
